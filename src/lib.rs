@@ -3,6 +3,7 @@ extern crate conrod;
 
 mod core;
 mod util;
+mod widgets;
 
 use conrod::backend::glium::glium::{self, Surface};
 use conrod::{widget, Colorable, Positionable, Widget};
@@ -11,29 +12,22 @@ use util::EventLoop;
 pub fn bootstrap() {
   let mut ui_core = core::UiCore::new(String::from("Conrod Greeter"), 400, 300);
 
-  // a macro provided by conrod to create widget ids. Conrod's primary data structure contains all
-  // the widgets, and uses their ids to keep track of them. The widget_ids! macro just provides a
-  // very quick and easy way of defining widget names (in this case just text) and giving them ids.
-  widget_ids!(struct Ids { text });
-  // Ids::new creates the the widget structure.
-  let ids = Ids::new(ui_core.ui.widget_id_generator());
+  let  widgets_register = widgets::WidgetRegister::new(&mut ui_core.ui);
 
-  // Conrod can use graphics. It stores these in a map. The system needs the map,
-  // even though it doesn't contain anything at this time, so create it:
+  // Create empty graphics map because it is a mandatory parameter
   let image_map = conrod::image::Map::<glium::texture::Texture2d>::new();
 
-  // Add a `Font` to the `Ui`'s `font::Map` from file.
+  // Load fonts
   const FONT_PATH: &'static str = concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/assets/fonts/NotoSans/NotoSans-Regular.ttf"
   );
   ui_core.ui.fonts.insert_from_file(FONT_PATH).unwrap();
 
-  // Finally, Conrod needs to render its UI. It uses a renderer to do this, so create one:
+  // Create a UI renderer
   let mut renderer = conrod::backend::glium::Renderer::new(&ui_core.display).unwrap();
 
-  // As an Immediate Mode GUI, Conrod sits in the main loop of the program, drawing the UI every
-  // time round the loop. Here's the main loop:
+  // Drawing loop for the immediate mode GUI
   'main: loop {
     let mut event_loop = EventLoop::new();
     for event in event_loop.next(&mut ui_core.events_loop) {
@@ -63,13 +57,7 @@ pub fn bootstrap() {
           ui_core.ui.handle_event(event);
         }
 
-      let ui = &mut ui_core.ui.set_widgets();
-      // "Hello World!" in the middle of the screen.
-      widget::Text::new("Hello World!")
-        .middle_of(ui.window)
-        .color(conrod::color::WHITE)
-        .font_size(32)
-        .set(ids.text, ui);
+      widgets_register.register(&mut ui_core.ui);
     }
 
     // Render the `Ui` and then display it on the screen.
