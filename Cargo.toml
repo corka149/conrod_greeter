@@ -1,0 +1,13 @@
+[package]
+name = "conrod_greeter"
+version = "0.1.0"
+authors = ["corka149 <corka149@mailbox.org>"]
+
+
+[profile.release]
+lto = true
+opt-level = 3
+
+
+[dependencies]
+conrod = {version = "0.60.0", features = ["glium", "winit"]}
