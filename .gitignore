@@ -1,3 +1,6 @@
 
 /target
 **/*.rs.bk
+.idea/
+Cargo.lock
+conrod_greeter.iml
