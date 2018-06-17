@@ -1,4 +1,3 @@
-use conrod::backend::glium::glium::{self, Surface};
 use conrod::{self, widget, Colorable, Positionable, Widget };
 
 // REPLACES widget_ids! macro

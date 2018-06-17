@@ -1,6 +1,4 @@
-use conrod::backend::glium::glium::{self, Surface};
-use conrod::{widget, Colorable, Positionable, Widget};
-use util::EventLoop;
+use conrod::backend::glium::glium;
 
 pub enum EventResult {
   CONTINUE,

@@ -1,4 +1,3 @@
-#[macro_use]
 extern crate conrod;
 
 mod core;
@@ -7,7 +6,6 @@ mod widgets;
 mod event_handling;
 
 use conrod::backend::glium::glium::{self, Surface};
-use conrod::{widget, Colorable, Positionable, Widget};
 use util::EventLoop;
 use event_handling::*;
 
