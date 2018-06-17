@@ -4,10 +4,13 @@ extern crate conrod;
 mod core;
 mod util;
 mod widgets;
+mod event_handling;
 
 use conrod::backend::glium::glium::{self, Surface};
 use conrod::{widget, Colorable, Positionable, Widget};
 use util::EventLoop;
+use event_handling::*;
+
 
 pub fn bootstrap() {
   let mut ui_core = core::UiCore::new(String::from("Conrod Greeter"), 400, 300);
@@ -31,20 +34,10 @@ pub fn bootstrap() {
   'main: loop {
     let mut event_loop = EventLoop::new();
     for event in event_loop.next(&mut ui_core.events_loop) {
-      match event.clone() {
-        glium::glutin::Event::WindowEvent { event, .. } => match event {
-          glium::glutin::WindowEvent::Closed
-          | glium::glutin::WindowEvent::KeyboardInput {
-            input:
-            glium::glutin::KeyboardInput {
-              virtual_keycode: Some(glium::glutin::VirtualKeyCode::Escape),
-              ..
-            },
-            ..
-          } => break 'main,
-          _ => (),
-        },
-        _ => (),
+
+      match react_on_event(event.clone()) {
+        EventResult::BREAK => break 'main,
+        EventResult::CONTINUE => ()
       }
 
       // add event handling for Conrod. Putting the following at the beginning of the event
